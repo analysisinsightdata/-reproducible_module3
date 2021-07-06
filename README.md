@@ -1,2 +1,2 @@
-# -reproducible_module3
+# reproducible_module3
 Reproducibility Course, Module 3
