@@ -1,11 +1,11 @@
 ---
 title: "Steak Preferences in the United States"
-subtitle: "Summary Report for the `r params$region` Region"
+subtitle: "Summary Report for the _**`r params$region`**_ Region"
 author: "Author: Your Name, Jr."
 date: "`r format(Sys.Date(), '%A, %B %d, %Y')`"
 output: html_document
 params: 
-  region: "Mountain"
+  region: "Pacific"
 ---
 
 ```{r setup, include=FALSE}
@@ -30,7 +30,8 @@ data("steak_survey", package="fivethirtyeight")
 # create a subset with no missing NAs
 # pick a specific region
 sdat <- na.omit(steak_survey) %>%
-  filter(region=="`r params$region`")
+  mutate(hhold_income = fct_drop(hhold_income)) %>%
+  filter(region == params$region)
 
 ```
 
@@ -41,18 +42,20 @@ In May 2014, Walt Hickey at
 article entitled
 ["How Americans Like Their Steak"](https://fivethirtyeight.com/features/how-americans-like-their-steak/). This article utilized survey data collected from 550 people which asked questions related to various risky activities, such as whether they speed in traffic, if they smoke or go skydiving, and if they prefer a riskier lottery. The survey also asked if they eat steak and if so, how they prefer their steak.
 
+
 ## Purpose
 
-The "steak survey" dataset that was used for the ["How
+The **```steak_survey```** dataset that was used for the ["How
 Americans Like Their
 Steak"](https://fivethirtyeight.com/features/how-americans-like-their-steak/) article, is available through
 the R package [`fivethirtyeight`](https://cran.r-
 project.org/web/packages/fivethirtyeight/index.html).
 Using this dataset, this article summarizes the steak
-preferences for the `r params$region` Region of the
+preferences for the _**`r params$region`**_ Region of the
 United States by gender.
 
-For our summary presented here, a subset of the original steak survey was extracted to only include responses with no missing data and only included respondents from the `r params$region` region of the US. The data subset used for our summary had `r nrow(sdat)` respondents.
+For our summary presented here, a subset of the original steak survey was extracted to only include responses with no missing data and only included respondents from the _**`r params$region`**_ region of the US. The data subset used for our summary had `r nrow(sdat)` respondents.
+
 
 ## Demographic Summary Tables
 
@@ -79,6 +82,7 @@ knitr::kable(dt, format="html",
                             full_width=FALSE)
 ```
 
+
 The education levels of the `r nrow(sdat)` survey respondents were:
 
 ```{r}
@@ -103,9 +107,8 @@ The income levels of the `r nrow(sdat)` survey respondents were:
 
 ```{r}
 # repeat for household income
-tb <- sdat %>% 
+tb <-sdat %>% 
   select(hhold_income) %>%
-#  mutate(hhold_income = fct_drop(hhold_income)) %>%
   table() %>%
   prop.table()*100
 
@@ -139,7 +142,6 @@ tb2 <-sdat %>%
 # create table summary for income
 tb3 <-sdat %>% 
   select(hhold_income) %>%
-#  mutate(hhold_income = fct_drop(hhold_income)) %>%
   table() %>%
   prop.table()*100
 
@@ -172,6 +174,7 @@ mtb2 %>%
   add_header_above(c("Ages"=2,"Education"=2,"Income"=2))
 ```
 
+
 ## Steak Preparation Preference by Gender
 
 Finally, here is a breakdown of the `r nrow(sdat)` survey respondents for the `r params$region` region of the US on how they prefer their steak to be prepared by gender.
@@ -180,7 +183,7 @@ Finally, here is a breakdown of the `r nrow(sdat)` survey respondents for the `r
 ggplot(sdat, aes(x = steak_prep, fill = female)) +
   geom_bar(position="dodge",colour="black") +
   ggtitle(paste0("Steak Preference by Gender: ",
-          "`r params$region`"," Region")) +
+          params$region," Region")) +
   xlab("Steak Preparation Preference") +
   ylab("Number of Respondents") +
   scale_fill_manual(values=c("skyblue","palevioletred"),
@@ -189,5 +192,3 @@ ggplot(sdat, aes(x = steak_prep, fill = female)) +
                     labels=c("Male", "Female")) +
   theme_fivethirtyeight()
 ```
-
-

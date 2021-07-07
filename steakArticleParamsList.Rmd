@@ -1,11 +1,18 @@
 ---
 title: "Steak Preferences in the United States"
-subtitle: "Summary Report for the `r params$region` Region"
+subtitle: "Summary Report for the _**`r params$region`**_ Region"
 author: "Author: Your Name, Jr."
 date: "`r format(Sys.Date(), '%A, %B %d, %Y')`"
 output: html_document
-params: 
-  region: "Mountain"
+params:
+  region: 
+    label:"Region:"
+    value: Mountain
+    input: select
+    choices: ["East North Central","East South Central", 
+              "Middle Atlantic","Mountain", "New England", 
+              "Pacific","South Atlantic", "West North Central",
+              "West South Central"]
 ---
 
 ```{r setup, include=FALSE}
@@ -30,6 +37,7 @@ data("steak_survey", package="fivethirtyeight")
 # create a subset with no missing NAs
 # pick a specific region
 sdat <- na.omit(steak_survey) %>%
+  mutate(hhold_income = fct_drop(hhold_income)) %>%
   filter(region == params$region)
 
 ```
@@ -44,16 +52,16 @@ article entitled
 
 ## Purpose
 
-The ```steak_survey``` dataset that was used for the ["How
+The **```steak_survey```** dataset that was used for the ["How
 Americans Like Their
 Steak"](https://fivethirtyeight.com/features/how-americans-like-their-steak/) article, is available through
 the R package [`fivethirtyeight`](https://cran.r-
 project.org/web/packages/fivethirtyeight/index.html).
 Using this dataset, this article summarizes the steak
-preferences for the `r params$region` Region of the
+preferences for the _**`r params$region`**_ Region of the
 United States by gender.
 
-For our summary presented here, a subset of the original steak survey was extracted to only include responses with no missing data and only included respondents from the `r params$region` region of the US. The data subset used for our summary had `r nrow(sdat)` respondents.
+For our summary presented here, a subset of the original steak survey was extracted to only include responses with no missing data and only included respondents from the _**`r params$region`**_ region of the US. The data subset used for our summary had `r nrow(sdat)` respondents.
 
 
 ## Demographic Summary Tables
